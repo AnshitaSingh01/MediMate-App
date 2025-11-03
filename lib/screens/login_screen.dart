@@ -1,50 +1,53 @@
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
     return Scaffold(
-      // Accessible app bar
-      appBar: AppBar(
-        title: Text('MediMate'),
-        centerTitle: true,
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            SizedBox(height: 24),
-            Image.asset('assets/images/placeholder.png', height: 140),
-            SizedBox(height: 24),
-            Text('Welcome to MediMate', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text('Sign in to continue', style: TextStyle(fontSize: 16, color: Colors.black54)),
-            SizedBox(height: 24),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Email or phone',
-                border: OutlineInputBorder(),
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('MediMate',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              Container(
+                height: 120,
+                width: 160,
+                color: Colors.teal,
+                child: const Center(
+                  child: Text('MEDICINE',
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                ),
               ),
-            ),
-            SizedBox(height: 12),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 30),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email or phone'),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 24.0),
-                child: Text('Sign In', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 10),
+              TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
               ),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/home');
-              },
-            ),
-          ],
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/home');
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+                child: const Text('Sign In'),
+              ),
+            ],
+          ),
         ),
       ),
     );

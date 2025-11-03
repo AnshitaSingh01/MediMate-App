@@ -1,62 +1,52 @@
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
+import '../services/storage_service.dart';
+import '../models/medicine.dart';
+import 'medicine_detail_screen.dart';
 
 class MedicineListScreen extends StatefulWidget {
+  const MedicineListScreen({super.key});
+
   @override
-  _MedicineListScreenState createState() => _MedicineListScreenState();
+  State<MedicineListScreen> createState() => _MedicineListScreenState();
 }
 
 class _MedicineListScreenState extends State<MedicineListScreen> {
-  Future<List<dynamic>> fetchMedicines() async {
-    final String response =
-        await rootBundle.loadString('assets/medicine_data.json');
-    return json.decode(response);
+  List<Medicine> medicines = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadMedicines();
+  }
+
+  Future<void> loadMedicines() async {
+    final data = await StorageService.getMedicines();
+    setState(() => medicines = data);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Medicines"),
-        backgroundColor: Colors.teal,
-      ),
-      body: FutureBuilder<List<dynamic>>(
-        future: fetchMedicines(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading data'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No medicines found'));
-          }
-          final medicines = snapshot.data!;
-          return ListView.builder(
-            itemCount: medicines.length,
-            itemBuilder: (context, index) {
-              final med = medicines[index];
-              return Card(
-                margin: EdgeInsets.all(10),
-                elevation: 3,
-                child: ListTile(
-                  leading: const Icon(Icons.medication,
-                      color: Colors.teal, size: 32),
-                  title: Text(
-                    med['name'],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18),
+          title: const Text('My Medicines'), backgroundColor: Colors.teal),
+      body: medicines.isEmpty
+          ? const Center(child: Text('No medicines added yet'))
+          : ListView.builder(
+              itemCount: medicines.length,
+              itemBuilder: (context, index) {
+                final med = medicines[index];
+                return ListTile(
+                  leading: const Icon(Icons.medication, color: Colors.teal),
+                  title: Text(med.name),
+                  subtitle: Text('${med.dose} - ${med.time}'),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => MedicineDetailScreen(medicine: med)),
                   ),
-                  subtitle: Text('${med['dose']} — ${med['time']}'),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/details', arguments: med);
-                  },
-                ),
-              );
-            },
-          );
-        },
-      ),
+                );
+              },
+            ),
     );
   }
 }

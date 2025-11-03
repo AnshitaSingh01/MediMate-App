@@ -1,75 +1,40 @@
 import 'package:flutter/material.dart';
+import '../models/medicine.dart';
 
-class MedicineDetailScreen extends StatefulWidget {
-  @override
-  State<MedicineDetailScreen> createState() => _MedicineDetailScreenState();
-}
+class MedicineDetailScreen extends StatelessWidget {
+  final Medicine medicine;
+  const MedicineDetailScreen({super.key, required this.medicine});
 
-class _MedicineDetailScreenState extends State<MedicineDetailScreen> {
-  bool addedToSchedule = false;
   @override
   Widget build(BuildContext context) {
-    final med =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>? ??
-            {};
-
-    /* {
-              'name': 'Paracetamol',
-              'time': '11:00 AM',
-              'desc': 'Pain relief / fever reducer',
-              'image': 'assets/images/pill.png'
-            };*/
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(med['name']?.toString() ?? 'Medicine Details'),
-      ),
+      appBar: AppBar(title: Text(medicine.name), backgroundColor: Colors.teal),
       body: Padding(
-        padding: EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              (med['image'] != null && med['image'] is String)
-                  ? med['image']
-                  : 'assets/images/pill.png',
-              height: 160,
+            Container(
+              height: 100,
+              color: Colors.teal,
+              child: const Center(
+                  child: Text('PILL',
+                      style: TextStyle(color: Colors.white, fontSize: 20))),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 20),
+            Text(medicine.name,
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text('Time: ${medicine.time}'),
+            Text('Dose: ${medicine.dose}'),
             Text(
-              med['name'] != null ? med['name'].toString() : 'No Name',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Time: ${med['time'] != null ? med['time'].toString() : 'N/A'}',
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Dose: ${med['dose'] != null ? med['dose'].toString() : 'N/A'}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Description: ${med['desc'] != null ? med['desc'].toString() : 'No details available'}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 20),
+                'Description: ${medicine.notes.isEmpty ? 'No details available' : medicine.notes}'),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Medicine added to schedule'),
-                  ),
-                );
-              },
-              child: Text('Add to Schedule'),
-            ),
-            SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Back'),
-            ),
+                onPressed: () {}, child: const Text('Add to Schedule')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Back')),
           ],
         ),
       ),
